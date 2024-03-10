@@ -14,9 +14,24 @@ const STORAGE_KEY = "BOOK_APPS";
 document.addEventListener("DOMContentLoaded", function () {
   const submitForm = document.getElementById("form");
   submitForm.addEventListener("submit", function (event) {
-    // event.preventDefault() to prevent the default trait of form that would refresh the page every submit
     event.preventDefault();
     addBook();
+  });
+
+  // Add event listeners to prevent dialog from closing when interacting with input fields
+  const titleInput = document.getElementById("title-input");
+  titleInput.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  const authorInput = document.getElementById("author-input");
+  authorInput.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  const yearInput = document.getElementById("year-input");
+  yearInput.addEventListener("click", function (event) {
+    event.stopPropagation();
   });
   //
   if (isStorageExist()) {
@@ -174,76 +189,33 @@ function makeBook(bookObject) {
     );
 
     editButton.append(editButtonInner);
-    editButton.setAttribute("data-open-modal", "true");
 
-    const editBox = document.createElement("dialog");
-    editBox.classList.add("bg-gray-800", "w-96", "rounded-2xl", "border");
+    const editBox = document.getElementById("edit-box");
 
-    const editBoxText = document.createElement("h1");
-    editBoxText.innerText = "Update Book";
-    editBoxText.classList.add("text-center", "my-4", "text-lg", "md:text-xl");
+    const cancelButton = document.getElementById("cancel-button");
 
-    const titleLabel = document.createElement("label");
-    titleLabel.innerText = "Title";
-    titleLabel.classList.add("text-center", "md:text-lg");
-    const titleInput = document.createElement("input");
-    titleInput.classList.add("m-4", "rounded-md");
-    titleInput.setAttribute("type", "text");
+    editButton.addEventListener("click", () => {
+      // Rendering editBox Input Value
+      const bookId = bookObject.id; // Get the ID of the book associated with the clicked button
+      const titleInput = document.getElementById("title-input");
+      titleInput.value = bookObject.title;
+      const authorInput = document.getElementById("author-input");
+      authorInput.value = bookObject.author;
+      const yearInput = document.getElementById("year-input");
+      yearInput.value = bookObject.year;
 
-    const authorLabel = document.createElement("label");
-    authorLabel.innerText = "Author";
-    authorLabel.classList.add("text-center", "md:text-lg");
-    const authorInput = document.createElement("input");
-    authorInput.classList.add("m-4", "rounded-md");
-    authorInput.setAttribute("type", "text");
+      editBox.showModal();
+      const blueUpdateButton = document.getElementById("update-form");
+      blueUpdateButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        updateBook(bookId); // Pass the book ID to the updateBook function
+        editBox.close();
+      });
+    });
 
-    const yearLabel = document.createElement("label");
-    yearLabel.innerText = "Year";
-    yearLabel.classList.add("text-center", "md:text-lg");
-    const yearInput = document.createElement("input");
-    yearInput.classList.add("m-4", "rounded-md");
-    yearInput.setAttribute("type", "text");
-
-    const inputContainer = document.createElement("form");
-    inputContainer.classList.add("flex", "flex-col");
-
-    inputContainer.append(
-      titleLabel,
-      titleInput,
-      authorLabel,
-      authorInput,
-      yearLabel,
-      yearInput
-    );
-
-    const blueUpdateButton = document.createElement("button");
-    blueUpdateButton.classList.add(
-      "mx-2",
-      "px-4",
-      "py-2",
-      "border",
-      "rounded-2xl",
-      "bg-blue-600"
-    );
-
-    const cancelButton = document.createElement("button");
-    cancelButton.classList.add(
-      "mx-2",
-      "px-4",
-      "py-2",
-      "border",
-      "rounded-2xl",
-      "bg-green-500"
-    );
-
-    const editButtonsContainer = document.createElement("div");
-    editButtonsContainer.classList.add("text-center", "my-4");
-
-    editButtonsContainer.append(blueUpdateButton, cancelButton);
-
-    editBox.setAttribute("data-modal", "true");
-    // cancelButton.setAttribute("data-close-modal", "true");
-    editBox.append(editBoxText, inputContainer, editButtonsContainer);
+    cancelButton.addEventListener("click", () => {
+      editBox.close();
+    });
 
     // Trash Button
     const trashButton = document.createElement("button");
@@ -316,10 +288,6 @@ function makeBook(bookObject) {
     const parentDialog = document.getElementById("parent-dialog");
     parentDialog.appendChild(dialogBox);
 
-    editButton.addEventListener("click", function () {
-      editBox.showModal();
-    });
-
     trashButton.addEventListener("click", function () {
       dialogBox.showModal();
     });
@@ -329,7 +297,7 @@ function makeBook(bookObject) {
     });
 
     redDeleteButton.addEventListener("click", function () {
-      removeBookFromFinished(bookObject.id);
+      removeBookFromArray(bookObject.id);
       dialogBox.close();
     });
 
@@ -384,7 +352,33 @@ function makeBook(bookObject) {
     );
 
     editButton.append(editButtonInner);
-    editButton.setAttribute("data-open-modal", "true");
+
+    const editBox = document.getElementById("edit-box");
+
+    const cancelButton = document.getElementById("cancel-button");
+
+    editButton.addEventListener("click", () => {
+      // Rendering editBox Input Value
+      const bookId = bookObject.id; // Get the ID of the book associated with the clicked button
+      const titleInput = document.getElementById("title-input");
+      titleInput.value = bookObject.title;
+      const authorInput = document.getElementById("author-input");
+      authorInput.value = bookObject.author;
+      const yearInput = document.getElementById("year-input");
+      yearInput.value = bookObject.year;
+
+      editBox.showModal();
+      const blueUpdateButton = document.getElementById("update-form");
+      blueUpdateButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        updateBook(bookId); // Pass the book ID to the updateBook function
+        editBox.close();
+      });
+    });
+
+    cancelButton.addEventListener("click", () => {
+      editBox.close();
+    });
 
     // Trash Button
     const trashButton = document.createElement("button");
@@ -466,7 +460,7 @@ function makeBook(bookObject) {
     });
 
     redDeleteButton.addEventListener("click", function () {
-      removeBookFromFinished(bookObject.id);
+      removeBookFromArray(bookObject.id);
       dialogBox.close();
     });
 
@@ -497,15 +491,41 @@ function findBook(bookId) {
   return null;
 }
 
-// Function removeBookFromFinished
-function removeBookFromFinished(bookId) {
+// Function removeBookFromArray
+function removeBookFromArray(bookId) {
   console.log(bookId);
   const bookTarget = findBookIndex(bookId);
+  console.log(bookTarget);
 
   if (bookTarget === -1) return;
 
   books.splice(bookTarget, 1);
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+// Function updateBook
+
+function updateBook(bookId) {
+  const titleInput = document.getElementById("title-input").value;
+  const authorInput = document.getElementById("author-input").value;
+  const yearInput = document.getElementById("year-input").value;
+
+  // Find the book object with the specified ID
+  const bookToUpdate = findBook(bookId);
+
+  if (bookToUpdate === null) return;
+
+  // Update the properties of the specific book object
+  bookToUpdate.id = +new Date();
+  bookToUpdate.title = titleInput;
+  bookToUpdate.author = authorInput;
+  bookToUpdate.year = parseInt(yearInput);
+
+  // Dispatch the render event to update the UI
+  document.dispatchEvent(new Event(RENDER_EVENT));
+
+  // Save the updated data to local storage
   saveData();
 }
 
@@ -549,6 +569,7 @@ function isStorageExist() {
   return true;
 }
 
+// Custom Event named SAVED_EVENT
 document.addEventListener(SAVED_EVENT, function () {
   console.log(localStorage.getItem(STORAGE_KEY));
 });

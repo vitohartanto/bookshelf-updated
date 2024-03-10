@@ -9,6 +9,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
+    <link rel="icon" type="image/x-icon" href="/img/book-solid.png" />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500;600;700&display=swap");
@@ -95,7 +96,7 @@
           <div class="flex flex-col py-2">
             <label class="text-2xl" for="">Title</label>
             <input
-              class="p-2 text-gray-800 rounded-md"
+              class="p-2 text-black rounded-md"
               type="text"
               id="title"
               name="title"
@@ -105,7 +106,7 @@
           <div class="flex flex-col py-2">
             <label class="text-2xl" for="">Author</label>
             <input
-              class="p-2 text-gray-800 rounded-md"
+              class="p-2 text-black rounded-md"
               type="text"
               id="author"
               name="author"
@@ -115,7 +116,7 @@
           <div class="flex flex-col py-2">
             <label class="text-2xl" for="">Published Year</label>
             <input
-              class="p-2 text-gray-800 rounded-md"
+              class="p-2 text-black rounded-md"
               type="number"
               id="year"
               name="year"
@@ -183,27 +184,52 @@
       </div>
     </main>
 
-    <!-- <dialog open class="bg-gray-800 rounded-2xl border">
-      <h1 class="text-center my-4 text-lg md:text-xl">Update Book</h1>
+    <dialog
+      id="edit-box"
+      class="bg-gray-800 rounded-2xl border fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80"
+    >
+      <h1 class="text-center mb-4 mt-8 text-xl md:text-2xl font-bold">
+        Update Book
+      </h1>
 
-      <form action="" class="flex flex-col">
-        <label for="" class="text-center md:text-lg">Title</label>
-        <input type="text" class="m-4 rounded-md" />
-        <label for="" class="text-center md:text-lg">Author</label>
-        <input type="text" class="m-4 rounded-md" />
-        <label for="" class="text-center md:text-lg">Published Year</label>
-        <input type="text" class="m-4 rounded-md" />
+      <form action="" class="flex flex-col mx-2" id="update-form">
+        <label for="" class="text-center text-lg md:text-xl">Title</label>
+        <input
+          id="title-input"
+          type="text"
+          class="m-4 rounded-md text-black p-2"
+        />
+        <label for="" class="text-center text-lg md:text-xl">Author</label>
+        <input
+          id="author-input"
+          type="text"
+          class="m-4 rounded-md text-black p-2"
+        />
+        <label for="" class="text-center text-lg md:text-xl"
+          >Published Year</label
+        >
+        <input
+          id="year-input"
+          type="number"
+          class="m-4 rounded-md text-black p-2"
+        />
+        <div class="text-center mt-4 mb-8">
+          <input
+            type="submit"
+            value="Update"
+            name="update"
+            id="blue-update-button"
+            class="mx-2 px-4 py-2 border rounded-2xl bg-blue-600 md:text-xl"
+          />
+          <button
+            id="cancel-button"
+            class="mx-2 px-4 py-2 border rounded-2xl bg-green-500 md:text-xl"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
-
-      <div class="text-center my-4">
-        <button class="mx-2 px-4 py-2 border rounded-2xl bg-blue-600">
-          Update
-        </button>
-        <button class="mx-2 px-4 py-2 border rounded-2xl bg-green-500">
-          Cancel
-        </button>
-      </div>
-    </dialog> -->
+    </dialog>
 
     <!-- FOOTER SECTION -->
     <footer class="mt-16 bg-gray-800 pt-6 pb-4">
